@@ -13,4 +13,8 @@ public class Dog {
 	public String Name(String name) {
 		return new String("GARUUU");
 	}
+	
+	public void Eat(String food) {
+		String mouse = food;
+	}
 }

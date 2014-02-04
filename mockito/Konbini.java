@@ -7,6 +7,7 @@ public class Konbini {
 	public String buyCannedBeer() {
 		
 		Integer age = 25;
+		
 		if (buySake.checkAge(age)) {
 			return "OK";
 		} else {

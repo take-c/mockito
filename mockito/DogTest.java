@@ -2,6 +2,7 @@ package mockito;
 
 import static org.junit.Assert.*;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -23,13 +24,13 @@ public class DogTest {
 		//定義してないメソッドは呼べない
 		
 		Dog mock = mock(Dog.class);
-//		assertEquals(mock.Bark(), "WAN!");
+//		assertEquals(mock.Bark(), "WAN!"); 定義していないので下記エラーになる
 //		java.lang.AssertionError: expected:<null> but was:<WAN!>
 		
 		when(mock.Bark()).thenReturn("BOW!!!"); //スタブメソッドの定義
 		assertEquals(mock.Bark(), "BOW!!!");
 		
-//		assertEquals(mock.Angry(), "GARUUU");
+//		assertEquals(mock.Angry(), "GARUUU"); 定義していないので下記エラーになる
 //		java.lang.AssertionError: expected:<null> but was:<GARUUU>
 	}
 
@@ -39,11 +40,12 @@ public class DogTest {
 		//定義してないメソッドも呼び出せる
 		
 		Dog spy = spy(new Dog());
-		assertEquals(spy.Bark(), "WAN!");
+		assertEquals(spy.Bark(), "WAN!"); //スタブメソッド定義前
+		
 		when(spy.Bark()).thenReturn("BOW!!!");
 		
-		assertEquals(spy.Bark(), "BOW!!!");
-		assertEquals(spy.Angry(), "GARUUU");
+		assertEquals(spy.Bark(), "BOW!!!"); //スタブメソッド定義後
+		assertEquals(spy.Angry(), "GARUUU"); //定義していないメソッドも呼び出せる
 	}
 	
 	@Test
@@ -62,13 +64,28 @@ public class DogTest {
 	
 	//アノテーションによるモックオブジェクトの生成方法
 	@Mock
-	Dog anno_mock;//フィールドを定義
+	Dog anno_mock;//フィールドを定義 モックオブジェクトはここにインジェクトする
 	@Test
 	public void testAnno() {
 		
-		initMocks(this);//おまじない  MockitoAnnotations.initMocks()
+		initMocks(this);//アノテーション初期化用  MockitoAnnotations.initMocks()
 		
 		when(anno_mock.Bark()).thenReturn("BOW!!!"); //スタブメソッドの定義
 		assertEquals(anno_mock.Bark(), "BOW!!!");
+	}
+	
+	@Test
+	public void testThrow() {
+		Dog mock = mock(Dog.class);
+//		when(mock.Eat("fish")).thenThrow(new Exception());//返り値がないメソッドのためエラーになる
+		
+		//戻り値がないメソッドは doXXXX()を使う
+		doThrow(new RuntimeException()).when(mock).Eat("fish"); //Eat()の戻り値をfishにする
+		try {
+			mock.Eat("fish");
+			Assert.fail(); //ここは実行されない
+		} catch (RuntimeException e) {
+			
+		}
 	}
 }

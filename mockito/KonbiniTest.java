@@ -11,19 +11,18 @@ import static org.mockito.Mockito.*;
 public class KonbiniTest {
 	
 	@InjectMocks
-	private Konbini konbini;
+	private Konbini konbini; //buysakeをインジェクトする
 	
 	@Mock
-	private BuySake buysake;
-
-	@InjectMocks
-	private Law law;
+	private BuySake buysake; //モックオブジェクト
 	
 	@Test
     public void testInject() {
-		initMocks(this);
-		when(buysake.checkAge(anyInt())).thenReturn(false);
+		initMocks(this);//アノテーション初期化用
 		
+		//konbiniオブジェクトの中で、buysakeオブジェクトを作成している
+		when(buysake.checkAge(anyInt())).thenReturn(false);
+
 		String result = konbini.buyCannedBeer();
 		assertEquals(result, "NG");
 	}
